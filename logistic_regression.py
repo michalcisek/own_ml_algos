@@ -12,11 +12,26 @@ iris = datasets.load_iris()
 X = iris["data"]
 y = (iris["target"] == 2).astype(int)
 
-# lr = LogisticRegression(penalty='none', solver='newton-cg')
-# lr.fit(X, y)
-
 
 class OwnLogisticRegression:
+    """
+    0. set learning rate and add to X column of 1 if you want to fit intercept
+    1. Initialize theta parameters
+    2. Calculate error for given theta parameters (logit(matmul(theta,X)) - y)
+    3. Multiply error by each feature and take average for each feature (mean(error*X.T))
+    4. Multiply learning rate by result from point 3 and subtract from current theta values (update theta values)
+    5. Repeat steps 2-4 until convergence
+
+    Logit function:
+    - 1/(1+exp(-x))
+
+    Cost function for one sample:
+    - (-log(p))  , if y=1
+    - (-log(1-p)), if y=0
+
+    Log loss function for all samples:
+    - (-mean(y*log(p) + (1-y)*log(1-p)))
+    """
     def __init__(self, learning_rate=0.01, n_iters=1e5, fit_intercept=True, verbose=False):
         self.learning_rate = learning_rate
         self.n_iters = n_iters
@@ -47,5 +62,8 @@ class OwnLogisticRegression:
         return self.theta
 
 
-lr = OwnLogisticRegression(learning_rate=0.1, n_iters=1e5, fit_intercept=True, verbose=False)
-lr.fit(X, y)
+lr1 = OwnLogisticRegression(learning_rate=0.01, n_iters=1e5, fit_intercept=True, verbose=False)
+lr1.fit(X, y)
+
+# TODO: add comparison with sklearn LogisticRegression. What are the differneces? https://datascience.stackexchange.com/questions/16751/learning-rate-in-logistic-regression-with-sklearn
+# TODO: check in R what are the parameters
